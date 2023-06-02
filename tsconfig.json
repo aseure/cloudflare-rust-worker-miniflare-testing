@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist/",
+    "module": "esnext",
+    "target": "esnext",
+    "lib": ["esnext"],
+    "types": ["node", "@cloudflare/workers-types"],
+    "allowJs": true,
+    "alwaysStrict": true,
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "strictNullChecks": true,
+    "noImplicitAny": false
+  }
+}
