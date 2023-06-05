@@ -11,25 +11,26 @@ export type TestContext = {
 export const test = anyTest as TestFn<TestContext>;
 
 test("tmp", async (t) => {
-  t.context.miniflare = new Miniflare({
-    // envPath: true,
-    // packagePath: true,
-    // wranglerConfigPath: true,
-    modules: true,
-    scriptPath: "./build/worker/shim.mjs",
-  });
+    t.context.miniflare = new Miniflare({
+        modules: true,
+        scriptPath: "./build/worker/shim.mjs",
+        modulesRules: [
+            {type: "CompiledWasm", include: ["**/*.wasm"], fallthrough: true}
+        ],
+    });
 
-  t.context.workerEndpoint = "http://localhost:8787";
+    t.context.workerEndpoint = "http://localhost:8787";
 
-  const response = await t.context.miniflare.dispatchFetch(
-      t.context.workerEndpoint,
-      {
-        method: "GET",
-        headers: {
-          "Cf-Debug": "1",
+    const response = await t.context.miniflare.dispatchFetch(
+        t.context.workerEndpoint,
+        {
+            method: "GET",
+            headers: {
+                "Cf-Debug": "1",
+            }
         }
-      }
-  );
+    );
 
-  t.true(response.status === 200);
+    const body = await response.text();
+    t.deepEqual("Hello, World!", body);
 });
